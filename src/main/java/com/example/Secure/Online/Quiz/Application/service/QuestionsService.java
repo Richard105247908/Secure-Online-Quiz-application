@@ -20,5 +20,7 @@ public class QuestionsService {
     public Quiz getQuizById(int id) {
         return questions.get(Integer.valueOf(id));
     }
-    
+    public int getNextid(){
+        return nextId++;
+    }
 }
