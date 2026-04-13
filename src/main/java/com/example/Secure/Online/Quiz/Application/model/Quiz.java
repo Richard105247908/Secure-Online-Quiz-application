@@ -2,7 +2,7 @@ package com.example.Secure.Online.Quiz.Application.model;
 
 import java.util.ArrayList;
 
-public class Question {
+public class Quiz {
 
     private int id;
     private String questionText;
@@ -16,11 +16,11 @@ public class Question {
     //  "placeholder" data instead of leaving fields null,
     //  you can link them using this():
 
-    public Question(){
+    public Quiz(){
         this(0, "New question", new ArrayList<>(), "None");
     }
 
-    public Question(int id, String questionText, ArrayList<String> options, String correctAnswers) {
+    public Quiz(int id, String questionText, ArrayList<String> options, String correctAnswers) {
         this.id = id;
         this.questionText = questionText;
         this.options = options;
