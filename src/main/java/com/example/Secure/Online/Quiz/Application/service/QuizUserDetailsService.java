@@ -7,8 +7,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 
 @Service
@@ -24,7 +22,11 @@ public class QuizUserDetailsService implements UserDetailsService {
            throw new UsernameNotFoundException("User not found");
        }
 
-       return org.springframework.security.core.userdetails.
+       return org.springframework.security.core.userdetails.User.builder()
+               .username(user.getUsername())
+               .password(user.getPassword())
+               .roles("USER")
+               .build();
    }
 
 }
