@@ -17,6 +17,9 @@ public class User {
         this.role = role;
     }
 
+    public User(String username, String encodedPassword) {
+    }
+
     public String getUsername() {
         return username;
     }

@@ -29,4 +29,13 @@ public class QuizUserDetailsService implements UserDetailsService {
                .build();
    }
 
+   public void registerUser(String username, String password, String email, String role) throws Exception {
+       if (users.containsKey(username)) {
+           throw new Exception("User already exists");
+       }else {
+           String encodedPassword = passwordEncoder.encode(password);
+           users.put(username, new User(username, encodedPassword, email,role));
+       }
+   }
+
 }
