@@ -14,7 +14,11 @@ import java.util.Map;
 public class QuizUserDetailsService implements UserDetailsService {
 
 private final Map<String, User> users = new HashMap<>();
-private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+private final PasswordEncoder passwordEncoder;
+
+public QuizUserDetailsService(PasswordEncoder passwordEncoder) {
+    this.passwordEncoder = passwordEncoder;
+}
 
 @Override
 public UserDetails loadUserByUsername (String username) throws UsernameNotFoundException {
@@ -26,7 +30,7 @@ public UserDetails loadUserByUsername (String username) throws UsernameNotFoundE
    return org.springframework.security.core.userdetails.User.builder()
            .username(user.getUsername())
            .password(user.getPassword())
-           .roles("USER")
+           .roles(user.getRole())
            .build();
 }
 

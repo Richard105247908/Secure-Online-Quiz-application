@@ -21,6 +21,9 @@ public class User {
     }
 
     public User(String username, String encodedPassword, String role) {
+        this.username = username;
+        this.password = encodedPassword;
+        this.role = role;
     }
 
     public String getUsername() {

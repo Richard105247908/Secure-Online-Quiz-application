@@ -83,21 +83,20 @@ public class QuizController {
         // Register the user by storing their details in the HashMap
         try {
             userDetailsService.registerUser(username, password, role);
+
+            // Authenticate the user programmatically
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(username, password)
+            );
+
+            // Set the authentication in the SecurityContext
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            // Redirect to the /login endpoint
+            return "redirect:/login?success";
         } catch (Exception userExistsAlready) {
-            // Redirect to the /register endpoint
             return "redirect:/register?error";
         }
-
-        // Authenticate the user programmatically
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(username, password)
-        );
-
-        // Set the authentication in the SecurityContext
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        // Redirect to the /login endpoint
-        return "redirect:/login?success";
     }
 
     @GetMapping("/addQuiz")
