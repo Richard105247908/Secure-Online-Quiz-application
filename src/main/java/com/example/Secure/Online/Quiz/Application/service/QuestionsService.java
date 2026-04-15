@@ -22,7 +22,7 @@ public class QuestionsService {
         return questions.get(Integer.valueOf(id));
     }
 
-    public int getNextid(){
+    public int getNextId(){
         return nextId++;
     }
 

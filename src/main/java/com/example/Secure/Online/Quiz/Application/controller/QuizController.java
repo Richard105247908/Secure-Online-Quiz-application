@@ -98,6 +98,28 @@ public String login(){
 
     @PostMapping("/addQuiz")
     public String addQuiz(@ModelAttribute Quiz quiz, Model model, Authentication authentication){
+        String role = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .findFirst()
+                .orElse("ROLE_USER");
+
+        if (role.equals("ROLE_ADMIN")) {
+            quiz.setId(questionsService.getNextId());
+            // Add the quiz to the service
+            questionsService.addQuiz(quiz);
+
+            // Add a success message to the model
+            model.addAttribute("success", "Quiz added successfully!");
+
+            // Redirect to the quiz list page
+            return "redirect:/home";
+        } else {
+            // Add an error message to the model
+            model.addAttribute("error", "You do not have permission to add a quiz.");
+
+            // Redirect to the add quiz page
+            return "redirect:/addQuiz?error";
+        }
 
     }
 
