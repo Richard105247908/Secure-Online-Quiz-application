@@ -20,6 +20,9 @@ public class User {
     public User(String username, String encodedPassword) {
     }
 
+    public User(String username, String encodedPassword, String role) {
+    }
+
     public String getUsername() {
         return username;
     }
