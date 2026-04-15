@@ -51,13 +51,14 @@ public class Quiz {
         this.options = options;
     }
 
-    public String getCorrectAnswers() {
+    public String getCorrectAnswer() {
         return correctAnswers;
     }
 
     public void setCorrectAnswers(String correctAnswers) {
         this.correctAnswers = correctAnswers;
     }
+
 
     @Override
     public String toString() {
