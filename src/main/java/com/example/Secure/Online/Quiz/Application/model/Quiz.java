@@ -7,7 +7,8 @@ public class Quiz {
     private int id;
     private String questionText;
     private ArrayList<String> options;
-    private String correctAnswers;
+    private String correctAnswer;
+
 
 //    public Question(){
 //    }
@@ -20,12 +21,13 @@ public class Quiz {
         this(0, "New question", new ArrayList<>(), "None");
     }
 
-    public Quiz(int id, String questionText, ArrayList<String> options, String correctAnswers) {
+    public Quiz(int id, String questionText, ArrayList<String> options, String correctAnswer) {
         this.id = id;
         this.questionText = questionText;
         this.options = options;
-        this.correctAnswers = correctAnswers;
+        this.correctAnswer = correctAnswer;
     }
+    
 
     public int getId() {
         return id;
@@ -52,11 +54,19 @@ public class Quiz {
     }
 
     public String getCorrectAnswer() {
-        return correctAnswers;
+        return correctAnswer;
     }
 
     public void setCorrectAnswers(String correctAnswers) {
-        this.correctAnswers = correctAnswers;
+        this.correctAnswer = correctAnswers;
+    }
+
+    // Add this inside your Quiz class
+    public String getOptionsAsString() {
+        if (options == null || options.isEmpty()) {
+            return "";
+        }
+        return String.join(", ", options);
     }
 
 
@@ -66,7 +76,7 @@ public class Quiz {
                 "id=" + id +
                 ", questionText='" + questionText + '\'' +
                 ", options=" + options +
-                ", correctAnswers='" + correctAnswers + '\'' +
+                ", correctAnswers='" + correctAnswer + '\'' +
                 '}';
     }
 }
