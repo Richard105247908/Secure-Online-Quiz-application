@@ -16,9 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+
 @Controller
 public class QuizController {
-
 
     private final QuizUserDetailsService userDetailsService;
     private final QuestionsService questionsService;
@@ -28,80 +28,92 @@ public class QuizController {
         this.userDetailsService = userDetailsService;
         this.authenticationManager = authenticationManager;
         this.questionsService = questionsService;
-
     }
 
     @GetMapping("/home")
     public String homepage(Model model) {
+        // Get the authenticated user's details
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        //Get username
+        // Get the username
         String username = authentication.getName();
-        System.out.println("");
         model.addAttribute("username", username);
 
-//Get role
+        // Get the user's role
         String role = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .findFirst()
-                .orElse("ROLE_USER");
+                .orElse("ROLE_USER"); // Default role if no authority is found
 
+        // Redirect to the appropriate page based on the role
         if (role.equals("ROLE_ADMIN")) {
+            // Fetch the latest quizzes from the service
             List<Quiz> quizzes = questionsService.getQuizzesList();
 
+            // Add the quizzes to the model
             model.addAttribute("quizzes", quizzes);
-            return "QuizList";
+            return "QuizList"; // Return the QuizList.html template
         } else {
+            // Fetch the latest quizzes from the service
             List<Quiz> quizzes = questionsService.getQuizzesList();
 
+            // Add the quizzes to the model
             model.addAttribute("quizzes", quizzes);
-            return "Quiz";
+            return "Quiz"; // Return the Quiz.html template
         }
-
     }
+
     @GetMapping("/login")
-public String login(){
-        return "Login";
+    public String login() {
+        return "login"; // Returns the login.html template
     }
 
     @GetMapping("/register")
-    public String register(){
-        return "Register";
+    public String register() {
+        return "register"; // Returns the register.html template
     }
 
+    // POST endpoint to handle user registration and auto-login
     @PostMapping("/register")
     public String registerUser(
-            @RequestParam String username,
-            @RequestParam String password,
-            @RequestParam String role
-    ){
+            @RequestParam String username, // Username from the form
+            @RequestParam String password, // Password from the form
+            @RequestParam String role // Role from the form
+    ) {
+        // Register the user by storing their details in the HashMap
         try {
-            userDetailsService.registerUser(username,password,role);
+            userDetailsService.registerUser(username, password, role);
         } catch (Exception userExistsAlready) {
+            // Redirect to the /register endpoint
             return "redirect:/register?error";
         }
 
+        // Authenticate the user programmatically
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(username, password)
         );
+
+        // Set the authentication in the SecurityContext
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
+        // Redirect to the /login endpoint
         return "redirect:/login?success";
     }
 
     @GetMapping("/addQuiz")
-    public String showAddQuizForm(Model model){
-        model.addAttribute("quiz",new Quiz());
-        return "addQuiz";
+    public String showAddQuizForm(Model model) {
+        model.addAttribute("quiz", new Quiz()); // Add a new Quiz object to the model
+        return "addQuiz"; // Return the addQuiz.html template
     }
-
     @PostMapping("/addQuiz")
-    public String addQuiz(@ModelAttribute Quiz quiz, Model model, Authentication authentication){
+    public String addQuiz(@ModelAttribute Quiz quiz, Model model, Authentication authentication) {
+        // Get the user's role
         String role = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .findFirst()
-                .orElse("ROLE_USER");
+                .orElse("ROLE_USER"); // Default role if no authority is found
 
+        // Redirect to the appropriate page based on the role
         if (role.equals("ROLE_ADMIN")) {
             quiz.setId(questionsService.getNextId());
             // Add the quiz to the service
@@ -119,8 +131,9 @@ public String login(){
             // Redirect to the add quiz page
             return "redirect:/addQuiz?error";
         }
-
     }
+
+    // Display the edit quiz page
     @GetMapping("/editQuiz/{id}")
     public String showEditQuizForm(@PathVariable("id") int id, Model model) {
         // Find the quiz by ID
@@ -132,6 +145,7 @@ public String login(){
         // Return the editQuiz.html template
         return "editQuiz";
     }
+
     @PostMapping("/editQuestion")
     public String editQuestion(@ModelAttribute("quiz") Quiz quiz) {
         // Get the authenticated user's details
@@ -154,6 +168,7 @@ public String login(){
             return "redirect:/home";
         }
     }
+
     @GetMapping("/deleteQuiz/{id}")
     public String deleteQuiz(@PathVariable("id") int id, Model model) {
         // Get the authenticated user's details
@@ -197,7 +212,4 @@ public String login(){
 
         // Return the result template
         return "result";
-    }
-
-
-}
+    }}
