@@ -8,38 +8,35 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class QuizUserDetailsService implements UserDetailsService {
 
-   private final HashMap<String, User>users= new HashMap<>();
-   private final PasswordEncoder passwordEncoder;
+private final Map<String, User> users = new HashMap<>();
+private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public QuizUserDetailsService(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
+@Override
+public UserDetails loadUserByUsername (String username) throws UsernameNotFoundException {
+   User user = users.get(username);
+   if (user == null) {
+       throw new UsernameNotFoundException("User not found");
+   }
+
+   return org.springframework.security.core.userdetails.User.builder()
+           .username(user.getUsername())
+           .password(user.getPassword())
+           .roles("USER")
+           .build();
+}
+
+    public void registerUser(String username, String password,String role) throws Exception {
+        if(users.containsKey(username)) {
+            throw new Exception("User already exists");
+        } else {
+            String encodedPassword = passwordEncoder.encode(password);
+            users.put(username, new User(username, encodedPassword, role));
+        }
     }
-
-   @Override
-    public UserDetails loadUserByUsername (String username) throws UsernameNotFoundException {
-       User user = users.get(username);
-       if (user == null) {
-           throw new UsernameNotFoundException("User not found");
-       }
-
-       return org.springframework.security.core.userdetails.User.builder()
-               .username(user.getUsername())
-               .password(user.getPassword())
-               .authorities("ROLE_" + user.getRole().toUpperCase()) // Ensures it matches ROLE_ADMIN
-               .build();
-   }
-
-   public void registerUser(String username, String password, String role) throws Exception {
-       if (users.containsKey(username)) {
-           throw new Exception("User already exists");
-       }else {
-           String encodedPassword = passwordEncoder.encode(password);
-           users.put(username, new User(username, encodedPassword,role));
-       }
-   }
 
 }
