@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -88,6 +89,16 @@ public String login(){
 
         return "redirect:/login?success";
     }
-    
+
+    @GetMapping("/addQuiz")
+    public String showAddQuizForm(Model model){
+        model.addAttribute("quiz",new Quiz());
+        return "addQuiz";
+    }
+
+    @PostMapping("/addQuiz")
+    public String addQuiz(@ModelAttribute Quiz quiz, Model model, Authentication authentication){
+
+    }
 
 }
